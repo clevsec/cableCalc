@@ -409,13 +409,19 @@
         function printResults() {
             const output = document.getElementById('results-output').innerHTML;
             const printWindow = window.open('', '_blank');
-            printWindow.document.write(
-                '<html><head><title>Print Results</title></head><body>' +
-                '<h2>Cleveland Security Cameras IP Cameras Cable and Switches Calculator Results</h2>' +
-                '<div>' + output + '</div>' +
-                '<script>window.print();setTimeout(function(){window.close();},1000);</script>' +
-                '</body></html>'
-            );
+            printWindow.document.write(`
+                <html>
+                    <head><title>Print Results</title></head>
+                    <body>
+                        <h2>Cleveland Security Cameras IP Cameras Cable and Switches Calculator Results</h2>
+                        <div>${output}</div>
+                        <script>
+                            window.print();
+                            setTimeout(function() { window.close(); }, 1000);
+                        </script>
+                    </body>
+                </html>
+            `);
             printWindow.document.close();
         }
     </script>
