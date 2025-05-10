@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP Camera Network Calculator</title>
+    <title>Cleveland Security Cameras IP Cameras Cable and Switches Calculator</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -54,12 +54,36 @@
         .modal-content {
             background-color: #ffffff;
             color: #1c2526;
-            margin: 10% auto;
+            margin: 5% auto;
             padding: 20px;
             border-radius: 8px;
             max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .results-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+        }
+
+        .results-content {
+            background-color: #ffffff;
+            color: #1c2526;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 95%;
+            height: 90vh;
             overflow-y: auto;
             position: relative;
         }
@@ -99,6 +123,7 @@
             border: none;
             cursor: pointer;
             padding: 12px;
+            margin: 5px;
         }
 
         button:hover {
@@ -113,9 +138,26 @@
             color: #1c2526;
         }
 
-        #output {
+        #results-output {
             white-space: pre-wrap;
-            font-size: 0.9em;
+            font-size: 1em;
+        }
+
+        footer {
+            margin-top: 20px;
+            padding: 10px;
+            text-align: center;
+            color: #28a745;
+            font-size: 1em;
+        }
+
+        footer a {
+            color: #28a745;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
 
         /* Mobile Responsiveness */
@@ -134,7 +176,7 @@
                 font-size: 1em;
             }
 
-            .modal-content {
+            .modal-content, .results-content {
                 margin: 5% auto;
                 width: 95%;
                 padding: 15px;
@@ -143,20 +185,31 @@
             input, select, button {
                 font-size: 0.9em;
             }
+
+            footer {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>IP Camera Network Design Tool</h1>
+        <h1>Cleveland Security Cameras IP Cameras Cable and Switches Calculator</h1>
         <button class="main-button" onclick="openCalculator()">Calculate Cables and Switches</button>
 
-        <!-- Modal for Calculator -->
+        <!-- Calculator Modal -->
         <div id="calculator-modal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeCalculator()">×</span>
                 <h2>Cable & PoE Calculator</h2>
                 <form id="calculator-form">
+                    <h3>Building Specifications</h3>
+                    <label for="building-size">Building Size (sq ft):</label>
+                    <input type="number" id="building-size" min="100" value="10000" required><br>
+
+                    <label for="num-floors">Number of Floors (1-3):</label>
+                    <input type="number" id="num-floors" min="1" max="3" value="1" required><br>
+
                     <h3>Camera Specifications</h3>
                     <label for="num-cameras">Number of Cameras:</label>
                     <input type="number" id="num-cameras" min="1" value="4" required><br>
@@ -195,9 +248,6 @@
                         <option value="Cat7">Cat7</option>
                     </select><br>
 
-                    <label for="cable-length">Average Cable Length per Camera (ft):</label>
-                    <input type="number" id="cable-length" min="1" value="150" required><br>
-
                     <label for="cable-material">Cable Material:</label>
                     <select id="cable-material" required>
                         <option value="Copper">Pure Copper</option>
@@ -220,15 +270,28 @@
 
                     <button type="button" onclick="calculate()">Calculate</button>
                 </form>
+            </div>
+        </div>
 
-                <div id="results" class="results">
-                    <h3>Results</h3>
-                    <div id="output"></div>
+        <!-- Results Modal -->
+        <div id="results-modal" class="results-modal">
+            <div class="results-content">
+                <span class="close" onclick="closeResults()">×</span>
+                <h2>Calculation Results</h2>
+                <div id="results-output"></div>
+                <div>
+                    <button onclick="saveAsPDF()">Save as PDF</button>
+                    <button onclick="printResults()">Print</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer>
+        <p>Contact us: <a href="mailto:contact@clevelandsecuritycameras.com">contact@clevelandsecuritycameras.com</a> | Phone: <a href="tel:+12163338245">216-333-8245</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         function openCalculator() {
             document.getElementById('calculator-modal').style.display = 'block';
@@ -236,32 +299,54 @@
 
         function closeCalculator() {
             document.getElementById('calculator-modal').style.display = 'none';
-            document.getElementById('output').innerHTML = ''; // Clear previous results
+        }
+
+        function openResults() {
+            document.getElementById('results-modal').style.display = 'block';
+        }
+
+        function closeResults() {
+            document.getElementById('results-modal').style.display = 'none';
+            document.getElementById('results-output').innerHTML = '';
         }
 
         function calculate() {
             // Get input values
+            const buildingSize = parseFloat(document.getElementById('building-size').value);
+            const numFloors = parseInt(document.getElementById('num-floors').value);
             const numCameras = parseInt(document.getElementById('num-cameras').value);
             const resolution = document.getElementById('resolution').value;
             const fps = parseInt(document.getElementById('fps').value);
             const compression = document.getElementById('compression').value;
             const powerPerCamera = parseFloat(document.getElementById('power').value);
             const cableType = document.getElementById('cable-type').value;
-            const cableLengthFt = parseFloat(document.getElementById('cable-length').value);
             const cableMaterial = document.getElementById('cable-material').value;
             const poeStandard = document.getElementById('poe-standard').value;
             const environment = document.getElementById('environment').value;
 
             // Input validation
-            if (!numCameras || !fps || !powerPerCamera || !cableLengthFt || isNaN(numCameras) || isNaN(fps) || isNaN(powerPerCamera) || isNaN(cableLengthFt)) {
-                document.getElementById('output').innerHTML = '<span style="color: red;">Please fill in all fields with valid numbers.</span>';
+            if (!buildingSize || !numFloors || !numCameras || !fps || !powerPerCamera || 
+                isNaN(buildingSize) || isNaN(numFloors) || isNaN(numCameras) || isNaN(fps) || isNaN(powerPerCamera) || 
+                numFloors < 1 || numFloors > 3) {
+                document.getElementById('results-output').innerHTML = '<span style="color: red;">Please fill in all fields with valid numbers (Floors: 1-3).</span>';
+                openResults();
                 return;
             }
 
-            // Convert feet to meters for power loss calculations (1 ft = 0.3048 m)
-            const cableLengthM = cableLengthFt * 0.3048;
+            // Cable length calculation
+            const sideLength = Math.sqrt(buildingSize); // Assume square building
+            const horizontalDistance = (sideLength / 2) * 1.2; // 20% for conduit routing
+            const camerasPerFloor = numCameras / numFloors;
+            let totalVerticalDistance = 0;
+            for (let floor = 1; floor <= numFloors; floor++) {
+                totalVerticalDistance += (floor - 1) * 10 * camerasPerFloor; // 10 ft per floor
+            }
+            const averageVerticalDistance = totalVerticalDistance / numCameras;
+            const cableLengthFt = horizontalDistance + averageVerticalDistance + 20; // Extra 20 ft
+            const cableLengthM = cableLengthFt * 0.3048; // Convert to meters for power loss
+            const totalCableLengthFt = cableLengthFt * numCameras;
 
-            // Bandwidth calculation (Mbps, per camera)
+            // Bandwidth calculation
             const bandwidthMap = {
                 '720p': { 'H.264': 4, 'H.265': 2, 'H.266': 1.5, 'MJPEG': 10 },
                 '1080p': { 'H.264': 8, 'H.265': 4, 'H.266': 3, 'MJPEG': 20 },
@@ -273,21 +358,20 @@
             };
 
             const baseBandwidth = bandwidthMap[resolution][compression];
-            const bandwidthPerCamera = baseBandwidth * (fps / 30); // Scale by FPS
-            const totalBandwidth = bandwidthPerCamera * numCameras * 1.3; // 30% overhead
+            const bandwidthPerCamera = baseBandwidth * (fps / 30);
+            const totalBandwidth = bandwidthPerCamera * numCameras * 1.3;
 
             // Power loss calculation
             const resistanceMap = { 'Cat5e': 0.188, 'Cat6': 0.188, 'Cat6a': 0.1, 'Cat7': 0.08 }; // Ω/m
-            const resistance = resistanceMap[cableType] * (cableMaterial === 'CCA' ? 1.5 : 1); // CCA has higher resistance
-            const current = powerPerCamera / 48; // 48V PoE
+            const resistance = resistanceMap[cableType] * (cableMaterial === 'CCA' ? 1.5 : 1);
+            const current = powerPerCamera / 48;
             const powerLoss = (current ** 2) * resistance * cableLengthM;
             const totalPowerPerCamera = powerPerCamera + powerLoss;
-            const totalPowerBudget = totalPowerPerCamera * numCameras * 1.1; // 10% reserve
+            const totalolibPowerBudget = totalPowerPerCamera * numCameras * 1.1;
 
-            // Cable requirements
-            const totalCableLengthFt = cableLengthFt * numCameras;
+            // Cable recommendations
             let recommendedCable = cableType;
-            if (totalBandwidth > 100 || cableLengthFt > 328) { // 328 ft = 100m
+            if (totalBandwidth > 100 || cableLengthFt > 328) {
                 recommendedCable = 'Cat6a or Cat7';
             }
             if (environment === 'Outdoor') {
@@ -298,32 +382,33 @@
             const poePowerMap = { '802.3af': 15.4, '802.3at': 30, '802.3bt': 90 };
             const poePowerPerPort = poePowerMap[poeStandard];
             const isPoESufficient = totalPowerPerCamera <= poePowerPerPort;
-            const numPortsNeeded = numCameras + Math.ceil(numCameras / 8); // Extra ports for uplink/NVR
-            const switchPowerBudget = totalPowerBudget * 1.2; // 20% buffer for switch
-
-            // Additional components
-            const extendersNeeded = cableLengthFt > 328 ? Math.ceil(cableLengthFt / 328 - 1) * numCameras : 0;
-            const surgeProtectors = environment === 'Outdoor' ? numCameras : 0;
+            const numPortsNeeded = numCameras + Math.ceil(numCameras / 8);
+            const switchPowerBudget = totalPowerBudget * 1.2;
             const recommendedSwitchType = numCameras > 20 ? 'Managed' : 'Unmanaged';
             const switchSpeed = totalBandwidth > 100 ? 'Gigabit' : '100 Mbps';
 
+            // Extenders
+            const extendersNeeded = cableLengthFt > 328 ? Math.ceil(cableLengthFt / 328 - 1) * numCameras : 0;
+
             // Output results
             let output = `
+                <strong>Building Size:</strong> ${buildingSize.toFixed(2)} sq ft<br>
+                <strong>Number of Floors:</strong> ${numFloors}<br>
+                <strong>Average Cable Length per Camera:</strong> ${cableLengthFt.toFixed(2)} ft<br>
+                <strong>Total Cable Length:</strong> ${totalCableLengthFt.toFixed(2)} ft<br>
+                <strong>Recommended Cable:</strong> ${recommendedCable}<br>
                 <strong>Total Bandwidth:</strong> ${totalBandwidth.toFixed(2)} Mbps<br>
                 <strong>Bandwidth per Camera:</strong> ${bandwidthPerCamera.toFixed(2)} Mbps<br>
                 <strong>Total Power Budget:</strong> ${totalPowerBudget.toFixed(2)} W<br>
                 <strong>Power Loss per Camera:</strong> ${powerLoss.toFixed(2)} W<br>
-                <strong>Total Cable Length:</strong> ${totalCableLengthFt.toFixed(2)} ft<br>
-                <strong>Recommended Cable:</strong> ${recommendedCable}<br>
                 <strong>PoE Standard Sufficient:</strong> ${isPoESufficient ? 'Yes' : 'No, consider higher PoE standard'}<br>
                 <strong>PoE Switch Ports Needed:</strong> ${numPortsNeeded}<br>
                 <strong>Switch Power Budget Needed:</strong> ${switchPowerBudget.toFixed(2)} W<br>
                 <strong>Recommended Switch:</strong> ${recommendedSwitchType}, ${switchSpeed}<br>
                 <strong>PoE Extenders Needed:</strong> ${extendersNeeded}<br>
-                <strong>Surge Protectors Needed:</strong> ${surgeProtectors}<br>
             `;
 
-            // Additional recommendations
+            // Recommendations
             if (cableMaterial === 'CCA') {
                 output += `<br><strong>Warning:</strong> CCA cables have higher resistance and may not be suitable for PoE. Use pure copper for reliability.`;
             }
@@ -334,7 +419,35 @@
                 output += `<br><strong>Scalability:</strong> Consider multiple PoE switches or a centralized NVR with high-capacity uplink.`;
             }
 
-            document.getElementById('output').innerHTML = output;
+            document.getElementById('results-output').innerHTML = output;
+            closeCalculator();
+            openResults();
+        }
+
+        function saveAsPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const output = document.getElementById('results-output').innerText;
+            doc.setFontSize(12);
+            doc.text("Cleveland Security Cameras IP Cameras Cable and Switches Calculator Results", 10, 10);
+            doc.text(output, 10, 20, { maxWidth: 180 });
+            doc.save('calculator-results.pdf');
+        }
+
+        function printResults() {
+            const output = document.getElementById('results-output').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head><title>Print Results</title></head>
+                <body>
+                    <h2>Cleveland Security Cameras IP Cameras Cable and Switches Calculator Results</h2>
+                    <div>${output}</div>
+                    <script>window.print(); setTimeout(() => window.close(), 1000);</script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
     </script>
 </body>
