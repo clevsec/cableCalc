@@ -288,6 +288,59 @@
             document.getElementById('results-output').innerHTML = '';
         }
 
+        function calculateBuildingSize(buildingSize, numFloors, numCameras) {
+            const sideLength = Math.sqrt(buildingSize);
+            const horizontalDistance = (sideLength / 2) * 1.2;
+            const camerasPerFloor = numCameras / numFloors;
+            let totalVerticalDistance = 0;
+            for (let floor = 1; floor <= numFloors; floor++) {
+                totalVerticalDistance += (floor - 1) * 10 * camerasPerFloor;
+            }
+            const averageVerticalDistance = totalVerticalDistance / numCameras;
+            const cableLengthFt = horizontalDistance + averageVerticalDistance + 20;
+            const cableLengthM = cableLengthFt * 0.3048;
+            const totalCableLengthFt = cableLengthFt * numCameras;
+            return [cableLengthFt, totalCableLengthFt, cableLengthM];
+        }
+
+        function calculateBandwidth(resolution, fps, compression, numCameras) {
+            const bandwidthMap = {
+                '720p': { 'H.264': 4, 'H.265': 2, 'H.266': 1.5, 'MJPEG': 10 },
+                '1080p': { 'H.264': 8, 'H.265': 4, 'H.266': 3, 'MJPEG': 20 },
+                '3MP': { 'H.264': 10, 'H.265': 5, 'H.266': 3.75, 'MJPEG': 25 },
+                '4MP': { 'H.264': 12, 'H.265': 6, 'H.266': 4.5, 'MJPEG': 30 },
+                '5MP': { 'H.264': 14, 'H.265': 7, 'H.266': 5.25, 'MJPEG': 35 },
+                '4K': { 'H.264': 20, 'H.265': 10, 'H.266': 7.5, 'MJPEG': 50 },
+                '12MP': { 'H.264': 30, 'H.265': 15, 'H.266': 11.25, 'MJPEG': 75 }
+            };
+
+            const baseBandwidth = bandwidthMap[resolution][compression];
+            const bandwidthPerCamera = baseBandwidth * (fps / 30);
+            const totalBandwidth = bandwidthPerCamera * numCameras * 1.3;
+            return [bandwidthPerCamera, totalBandwidth];
+        }
+
+        function calculatePower(powerPerCamera, cableType, cableMaterial, cableLengthM, numCameras) {
+            const resistanceMap = { 'Cat5e': 0.188, 'Cat6': 0.188, 'Cat6a': 0.1, 'Cat7': 0.08 };
+            const resistance = resistanceMap[cableType] * (cableMaterial === 'CCA' ? 1.5 : 1);
+            const current = powerPerCamera / 48;
+            const powerLoss = current * current * resistance * cableLengthM;
+            const totalPowerPerCamera = powerPerCamera + powerLoss;
+            const totalPowerBudget = totalPowerPerCamera * numCameras * 1.1;
+            return [powerLoss, totalPowerPerCamera, totalPowerBudget];
+        }
+
+        function calculateSwitches(totalBandwidth, totalPowerPerCamera, numCameras, poeStandard) {
+            const poePowerMap = { '802.3af': 15.4, '802.3at': 30, '802.3bt': 90 };
+            const poePowerPerPort = poePowerMap[poeStandard];
+            const isPoESufficient = totalPowerPerCamera <= poePowerPerPort;
+            const numPortsNeeded = numCameras + Math.ceil(numCameras / 8);
+            const switchPowerBudget = totalPowerPerCamera * numCameras * 1.2;
+            const recommendedSwitchType = numCameras > 20 ? 'Managed' : 'Unmanaged';
+            const switchSpeed = totalBandwidth > 100 ? 'Gigabit' : '100 Mbps';
+            return [isPoESufficient, numPortsNeeded, switchPowerBudget, recommendedSwitchType, switchSpeed];
+        }
+
         function calculate() {
             const buildingSize = parseFloat(document.getElementById('building-size').value);
             const numFloors = parseInt(document.getElementById('num-floors').value);
@@ -309,38 +362,10 @@
                 return;
             }
 
-            const sideLength = Math.sqrt(buildingSize);
-            const horizontalDistance = (sideLength / 2) * 1.2;
-            const camerasPerFloor = numCameras / numFloors;
-            let totalVerticalDistance = 0;
-            for (let floor = 1; floor <= numFloors; floor++) {
-                totalVerticalDistance += (floor - 1) * 10 * camerasPerFloor;
-            }
-            const averageVerticalDistance = totalVerticalDistance / numCameras;
-            const cableLengthFt = horizontalDistance + averageVerticalDistance + 20;
-            const cableLengthM = cableLengthFt * 0.3048;
-            const totalCableLengthFt = cableLengthFt * numCameras;
-
-            const bandwidthMap = {
-                '720p': { 'H.264': 4, 'H.265': 2, 'H.266': 1.5, 'MJPEG': 10 },
-                '1080p': { 'H.264': 8, 'H.265': 4, 'H.266': 3, 'MJPEG': 20 },
-                '3MP': { 'H.264': 10, 'H.265': 5, 'H.266': 3.75, 'MJPEG': 25 },
-                '4MP': { 'H.264': 12, 'H.265': 6, 'H.266': 4.5, 'MJPEG': 30 },
-                '5MP': { 'H.264': 14, 'H.265': 7, 'H.266': 5.25, 'MJPEG': 35 },
-                '4K': { 'H.264': 20, 'H.265': 10, 'H.266': 7.5, 'MJPEG': 50 },
-                '12MP': { 'H.264': 30, 'H.265': 15, 'H.266': 11.25, 'MJPEG': 75 }
-            };
-
-            const baseBandwidth = bandwidthMap[resolution][compression];
-            const bandwidthPerCamera = baseBandwidth * (fps / 30);
-            const totalBandwidth = bandwidthPerCamera * numCameras * 1.3;
-
-            const resistanceMap = { 'Cat5e': 0.188, 'Cat6': 0.188, 'Cat6a': 0.1, 'Cat7': 0.08 };
-            const resistance = resistanceMap[cableType] * (cableMaterial === 'CCA' ? 1.5 : 1);
-            const current = powerPerCamera / 48;
-            const powerLoss = current * current * resistance * cableLengthM;
-            const totalPowerPerCamera = powerPerCamera + powerLoss;
-            const totalPowerBudget = totalPowerPerCamera * numCameras * 1.1;
+            const [cableLengthFt, totalCableLengthFt, cableLengthM] = calculateBuildingSize(buildingSize, numFloors, numCameras);
+            const [bandwidthPerCamera, totalBandwidth] = calculateBandwidth(resolution, fps, compression, numCameras);
+            const [powerLoss, totalPowerPerCamera, totalPowerBudget] = calculatePower(powerPerCamera, cableType, cableMaterial, cableLengthM, numCameras);
+            const [isPoESufficient, numPortsNeeded, switchPowerBudget, recommendedSwitchType, switchSpeed] = calculateSwitches(totalBandwidth, totalPowerPerCamera, numCameras, poeStandard);
 
             let recommendedCable = cableType;
             if (totalBandwidth > 100 || cableLengthFt > 328) {
@@ -349,14 +374,6 @@
             if (environment === 'Outdoor') {
                 recommendedCable += ' (Shielded, Weather-Resistant)';
             }
-
-            const poePowerMap = { '802.3af': 15.4, '802.3at': 30, '802.3bt': 90 };
-            const poePowerPerPort = poePowerMap[poeStandard];
-            const isPoESufficient = totalPowerPerCamera <= poePowerPerPort;
-            const numPortsNeeded = numCameras + Math.ceil(numCameras / 8);
-            const switchPowerBudget = totalPowerBudget * 1.2;
-            const recommendedSwitchType = numCameras > 20 ? 'Managed' : 'Unmanaged';
-            const switchSpeed = totalBandwidth > 100 ? 'Gigabit' : '100 Mbps';
 
             const extendersNeeded = cableLengthFt > 328 ? Math.ceil(cableLengthFt / 328 - 1) * numCameras : 0;
 
@@ -398,32 +415,4 @@
                 const doc = new jsPDF();
                 const output = document.getElementById('results-output').innerText;
                 doc.setFontSize(12);
-                doc.text("Cleveland Security Cameras IP Cameras Cable and Switches Calculator Results", 10, 10);
-                doc.text(output, 10, 20, { maxWidth: 180 });
-                doc.save('calculator-results.pdf');
-            } else {
-                alert('PDF library not loaded. Please try again.');
-            }
-        }
-
-        function printResults() {
-            const output = document.getElementById('results-output').innerHTML;
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                    <head><title>Print Results</title></head>
-                    <body>
-                        <h2>Cleveland Security Cameras IP Cameras Cable and Switches Calculator Results</h2>
-                        <div>${output}</div>
-                        <script>
-                            window.print();
-                            setTimeout(function() { window.close(); }, 1000);
-                        </script>
-                    </body>
-                </html>
-            `);
-            printWindow.document.close();
-        }
-    </script>
-</body>
-</html>
+                doc
