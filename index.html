@@ -1,0 +1,20 @@
+def calculate_poe_requirements(num_cameras, resolution, fps, power_per_camera, cable_length, cable_type="Cat5e"):
+    # Bandwidth lookup (Mbps, H.265)
+    bandwidth_map = {"720p": 4, "1080p": 8, "4K": 15}
+    bandwidth = num_cameras * bandwidth_map[resolution] * fps / 30 * 1.3  # 30% overhead
+
+    # Power loss calculation
+    resistance = 0.188 if cable_type in ["Cat5e", "Cat6"] else 0.1  # Ω/m
+    current = power_per_camera / 48  # 48V PoE
+    power_loss = (current ** 2) * resistance * cable_length
+    total_power = num_cameras * (power_per_camera + power_loss) * 1.1  # 10% reserve
+
+    return {
+        "Total Bandwidth (Mbps)": round(bandwidth, 2),
+        "Total Power Budget (W)": round(total_power, 2),
+        "Power Loss per Camera (W)": round(power_loss, 2),
+        "Recommended Cable": "Cat6" if bandwidth > 100 or cable_length > 100 else cable_type
+    }
+
+# Example usage
+print(calculate_poe_requirements(4, "4K", 30, 12, 100))
