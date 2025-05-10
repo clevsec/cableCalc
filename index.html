@@ -23,6 +23,7 @@
         h1 {
             color: #28a745;
             font-size: 2.5em;
+            margin-bottom: 20px;
         }
 
         .main-button {
@@ -196,93 +197,93 @@
     <div class="container">
         <h1>Cleveland Security Cameras IP Cameras Cable and Switches Calculator</h1>
         <button class="main-button" onclick="openCalculator()">Calculate Cables and Switches</button>
+    </div>
 
-        <!-- Calculator Modal -->
-        <div id="calculator-modal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeCalculator()">×</span>
-                <h2>Cable & PoE Calculator</h2>
-                <form id="calculator-form">
-                    <h3>Building Specifications</h3>
-                    <label for="building-size">Building Size (sq ft):</label>
-                    <input type="number" id="building-size" min="100" value="10000" required><br>
+    <!-- Calculator Modal -->
+    <div id="calculator-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCalculator()">×</span>
+            <h2>Cable & PoE Calculator</h2>
+            <form id="calculator-form">
+                <h3>Building Specifications</h3>
+                <label for="building-size">Building Size (sq ft):</label>
+                <input type="number" id="building-size" min="100" value="10000" required><br>
 
-                    <label for="num-floors">Number of Floors (1-3):</label>
-                    <input type="number" id="num-floors" min="1" max="3" value="1" required><br>
+                <label for="num-floors">Number of Floors (1-3):</label>
+                <input type="number" id="num-floors" min="1" max="3" value="1" required><br>
 
-                    <h3>Camera Specifications</h3>
-                    <label for="num-cameras">Number of Cameras:</label>
-                    <input type="number" id="num-cameras" min="1" value="4" required><br>
+                <h3>Camera Specifications</h3>
+                <label for="num-cameras">Number of Cameras:</label>
+                <input type="number" id="num-cameras" min="1" value="4" required><br>
 
-                    <label for="resolution">Camera Resolution:</label>
-                    <select id="resolution" required>
-                        <option value="720p">720p (1MP)</option>
-                        <option value="1080p">1080p (2MP)</option>
-                        <option value="3MP">3MP</option>
-                        <option value="4MP">4MP</option>
-                        <option value="5MP">5MP</option>
-                        <option value="4K">4K (8MP)</option>
-                        <option value="12MP">12MP</option>
-                    </select><br>
+                <label for="resolution">Camera Resolution:</label>
+                <select id="resolution" required>
+                    <option value="720p">720p (1MP)</option>
+                    <option value="1080p">1080p (2MP)</option>
+                    <option value="3MP">3MP</option>
+                    <option value="4MP">4MP</option>
+                    <option value="5MP">5MP</option>
+                    <option value="4K">4K (8MP)</option>
+                    <option value="12MP">12MP</option>
+                </select><br>
 
-                    <label for="fps">Frames Per Second (FPS):</label>
-                    <input type="number" id="fps" min="1" value="30" required><br>
+                <label for="fps">Frames Per Second (FPS):</label>
+                <input type="number" id="fps" min="1" value="30" required><br>
 
-                    <label for="compression">Compression Codec:</label>
-                    <select id="compression" required>
-                        <option value="H.264">H.264</option>
-                        <option value="H.265">H.265 (HEVC)</option>
-                        <option value="H.266">H.266 (VVC)</option>
-                        <option value="MJPEG">MJPEG</option>
-                    </select><br>
+                <label for="compression">Compression Codec:</label>
+                <select id="compression" required>
+                    <option value="H.264">H.264</option>
+                    <option value="H.265">H.265 (HEVC)</option>
+                    <option value="H.266">H.266 (VVC)</option>
+                    <option value="MJPEG">MJPEG</option>
+                </select><br>
 
-                    <label for="power">Power per Camera (W):</label>
-                    <input type="number" id="power" min="1" value="12" step="0.1" required><br>
+                <label for="power">Power per Camera (W):</label>
+                <input type="number" id="power" min="1" value="12" step="0.1" required><br>
 
-                    <h3>Cable Specifications</h3>
-                    <label for="cable-type">Cable Type:</label>
-                    <select id="cable-type" required>
-                        <option value="Cat5e">Cat5e</option>
-                        <option value="Cat6">Cat6</option>
-                        <option value="Cat6a">Cat6a</option>
-                        <option value="Cat7">Cat7</option>
-                    </select><br>
+                <h3>Cable Specifications</h3>
+                <label for="cable-type">Cable Type:</label>
+                <select id="cable-type" required>
+                    <option value="Cat5e">Cat5e</option>
+                    <option value="Cat6">Cat6</option>
+                    <option value="Cat6a">Cat6a</option>
+                    <option value="Cat7">Cat7</option>
+                </select><br>
 
-                    <label for="cable-material">Cable Material:</label>
-                    <select id="cable-material" required>
-                        <option value="Copper">Pure Copper</option>
-                        <option value="CCA">Copper-Clad Aluminum (CCA)</option>
-                    </select><br>
+                <label for="cable-material">Cable Material:</label>
+                <select id="cable-material" required>
+                    <option value="Copper">Pure Copper</option>
+                    <option value="CCA">Copper-Clad Aluminum (CCA)</option>
+                </select><br>
 
-                    <h3>System Specifications</h3>
-                    <label for="poe-standard">PoE Standard:</label>
-                    <select id="poe-standard" required>
-                        <option value="802.3af">802.3af (15.4W/port)</option>
-                        <option value="802.3at">802.3at (30W/port)</option>
-                        <option value="802.3bt">802.3bt (60W-90W/port)</option>
-                    </select><br>
+                <h3>System Specifications</h3>
+                <label for="poe-standard">PoE Standard:</label>
+                <select id="poe-standard" required>
+                    <option value="802.3af">802.3af (15.4W/port)</option>
+                    <option value="802.3at">802.3at (30W/port)</option>
+                    <option value="802.3bt">802.3bt (60W-90W/port)</option>
+                </select><br>
 
-                    <label for="environment">Environment:</label>
-                    <select id="environment" required>
-                        <option value="Indoor">Indoor</option>
-                        <option value="Outdoor">Outdoor</option>
-                    </select><br>
+                <label for="environment">Environment:</label>
+                <select id="environment" required>
+                    <option value="Indoor">Indoor</option>
+                    <option value="Outdoor">Outdoor</option>
+                </select><br>
 
-                    <button type="button" onclick="calculate()">Calculate</button>
-                </form>
-            </div>
+                <button type="button" onclick="calculate()">Calculate</button>
+            </form>
         </div>
+    </div>
 
-        <!-- Results Modal -->
-        <div id="results-modal" class="results-modal">
-            <div class="results-content">
-                <span class="close" onclick="closeResults()">×</span>
-                <h2>Calculation Results</h2>
-                <div id="results-output"></div>
-                <div>
-                    <button onclick="saveAsPDF()">Save as PDF</button>
-                    <button onclick="printResults()">Print</button>
-                </div>
+    <!-- Results Modal -->
+    <div id="results-modal" class="results-modal">
+        <div class="results-content">
+            <span class="close" onclick="closeResults()">×</span>
+            <h2>Calculation Results</h2>
+            <div id="results-output"></div>
+            <div>
+                <button onclick="saveAsPDF()">Save as PDF</button>
+                <button onclick="printResults()">Print</button>
             </div>
         </div>
     </div>
@@ -367,7 +368,7 @@
             const current = powerPerCamera / 48;
             const powerLoss = (current ** 2) * resistance * cableLengthM;
             const totalPowerPerCamera = powerPerCamera + powerLoss;
-            const totalolibPowerBudget = totalPowerPerCamera * numCameras * 1.1;
+            const totalPowerBudget = totalPowerPerCamera * numCameras * 1.1;
 
             // Cable recommendations
             let recommendedCable = cableType;
