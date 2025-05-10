@@ -1,429 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cleveland Security Cameras IP Cameras Cable and Switches Calculator</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #1c2526;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            text-align: center;
-        }
-        h1 {
-            color: #28a745;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-        .main-button {
-            background-color: #28a745;
-            color: #ffffff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .main-button:hover {
-            background-color: #218838;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-        .modal-content {
-            background-color: #ffffff;
-            color: #1c2526;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        .results-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1001;
-        }
-        .results-content {
-            background-color: #ffffff;
-            color: #1c2526;
-            margin: 2% auto;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 800px;
-            width: 95%;
-            height: 90vh;
-            overflow-y: auto;
-        }
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            color: #1c2526;
-            font-size: 1.5em;
-            cursor: pointer;
-        }
-        form {
-            display: grid;
-            gap: 15px;
-        }
-        label {
-            font-weight: bold;
-            color: #1c2526;
-            display: block;
-            margin-bottom: 5px;
-        }
-        input, select, button {
-            padding: 10px;
-            border: 1px solid #28a745;
-            border-radius: 4px;
-            width: 100%;
-            box-sizing: border-box;
-            font-size: 1em;
-        }
-        button {
-            background-color: #28a745;
-            color: #ffffff;
-            border: none;
-            cursor: pointer;
-            padding: 12px;
-            margin: 5px;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        #results-output {
-            white-space: pre-wrap;
-            font-size: 1em;
-        }
-        footer {
-            margin-top: 20px;
-            padding: 10px;
-            text-align: center;
-            color: #28a745;
-            font-size: 1em;
-        }
-        footer a {
-            color: #28a745;
-            text-decoration: none;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .container {
-                margin: 10px;
-                padding: 10px;
-            }
-            h1 {
-                font-size: 1.8em;
-            }
-            .main-button {
-                padding: 10px 20px;
-                font-size: 1em;
-            }
-            .modal-content, .results-content {
-                margin: 5% auto;
-                width: 95%;
-                padding: 15px;
-            }
-            input, select, button {
-                font-size: 0.9em;
-            }
-            footer {
-                font-size: 0.9em;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Camera Cable & Switch Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1c2526;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      color: #28a745;
+    }
+
+    .main-button {
+      background-color: #28a745;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background: white;
+      color: #000;
+      padding: 20px;
+      max-width: 600px;
+      margin: 5% auto;
+      border-radius: 8px;
+    }
+
+    .close {
+      float: right;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    label, input, select {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Cleveland Security Cameras IP Cameras Cable and Switches Calculator</h1>
-        <button class="main-button" onclick="openCalculator()">Calculate Cables and Switches</button>
+
+  <div class="container">
+    <h1>Camera Cable & Switch Calculator</h1>
+    <button class="main-button" id="openBtn">Calculate Cables and Switches</button>
+  </div>
+
+  <!-- Calculator Modal -->
+  <div id="calculator-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeBtn">&times;</span>
+      <h2>Enter Camera Setup Info</h2>
+      <form>
+        <label for="building-size">Building Size (sq ft):</label>
+        <input type="number" id="building-size" required value="10000" />
+
+        <label for="num-cameras">Number of Cameras:</label>
+        <input type="number" id="num-cameras" required value="4" />
+
+        <label for="cable-type">Cable Type:</label>
+        <select id="cable-type" required>
+          <option value="Cat5e">Cat5e</option>
+          <option value="Cat6">Cat6</option>
+        </select>
+
+        <button type="button" onclick="calculate()">Calculate</button>
+      </form>
     </div>
+  </div>
 
-    <div id="calculator-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeCalculator()">×</span>
-            <h2>Cable & PoE Calculator</h2>
-            <form id="calculator-form">
-                <h3>Building Specifications</h3>
-                <div>
-                    <label for="building-size">Building Size (sq ft):</label>
-                    <input type="number" id="building-size" min="100" value="10000" required>
-                </div>
-                <div>
-                    <label for="num-floors">Number of Floors (1-3):</label>
-                    <input type="number" id="num-floors" min="1" max="3" value="1" required>
-                </div>
+  <script>
+    // Open modal
+    document.getElementById('openBtn').addEventListener('click', function() {
+      document.getElementById('calculator-modal').style.display = 'block';
+    });
 
-                <h3>Camera Specifications</h3>
-                <div>
-                    <label for="num-cameras">Number of Cameras:</label>
-                    <input type="number" id="num-cameras" min="1" value="4" required>
-                </div>
-                <div>
-                    <label for="resolution">Camera Resolution:</label>
-                    <select id="resolution" required>
-                        <option value="720p">720p (1MP)</option>
-                        <option value="1080p">1080p (2MP)</option>
-                        <option value="3MP">3MP</option>
-                        <option value="4MP">4MP</option>
-                        <option value="5MP">5MP</option>
-                        <option value="4K">4K (8MP)</option>
-                        <option value="12MP">12MP</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="fps">Frames Per Second (FPS):</label>
-                    <input type="number" id="fps" min="1" value="30" required>
-                </div>
-                <div>
-                    <label for="compression">Compression Codec:</label>
-                    <select id="compression" required>
-                        <option value="H.264">H.264</option>
-                        <option value="H.265">H.265 (HEVC)</option>
-                        <option value="H.266">H.266 (VVC)</option>
-                        <option value="MJPEG">MJPEG</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="power">Power per Camera (W):</label>
-                    <input type="number" id="power" min="1" value="12" step="0.1" required>
-                </div>
+    // Close modal
+    document.getElementById('closeBtn').addEventListener('click', function() {
+      document.getElementById('calculator-modal').style.display = 'none';
+    });
 
-                <h3>Cable Specifications</h3>
-                <div>
-                    <label for="cable-type">Cable Type:</label>
-                    <select id="cable-type" required>
-                        <option value="Cat5e">Cat5e</option>
-                        <option value="Cat6">Cat6</option>
-                        <option value="Cat6a">Cat6a</option>
-                        <option value="Cat7">Cat7</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="cable-material">Cable Material:</label>
-                    <select id="cable-material" required>
-                        <option value="Copper">Pure Copper</option>
-                        <option value="CCA">Copper-Clad Aluminum (CCA)</option>
-                    </select>
-                </div>
+    // Example calculation (you can expand this)
+    function calculate() {
+      const size = document.getElementById('building-size').value;
+      const cams = document.getElementById('num-cameras').value;
+      const cable = document.getElementById('cable-type').value;
 
-                <h3>System Specifications</h3>
-                <div>
-                    <label for="poe-standard">PoE Standard:</label>
-                    <select id="poe-standard" required>
-                        <option value="802.3af">802.3af (15.4W/port)</option>
-                        <option value="802.3at">802.3at (30W/port)</option>
-                        <option value="802.3bt">802.3bt (60W-90W/port)</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="environment">Environment:</label>
-                    <select id="environment" required>
-                        <option value="Indoor">Indoor</option>
-                        <option value="Outdoor">Outdoor</option>
-                    </select>
-                </div>
-                <button type="button" onclick="calculate()">Calculate</button>
-            </form>
-        </div>
-    </div>
+      alert(`Calculating for ${cams} cameras in a ${size} sq ft building using ${cable} cable.`);
+    }
+  </script>
 
-    <div id="results-modal" class="results-modal">
-        <div class="results-content">
-            <span class="close" onclick="closeResults()">×</span>
-            <h2>Calculation Results</h2>
-            <div id="results-output"></div>
-            <div>
-                <button onclick="saveAsPDF()">Save as PDF</button>
-                <button onclick="printResults()">Print</button>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        <p>Contact us: <a href="mailto:contact@clevelandsecuritycameras.com">contact@clevelandsecuritycameras.com</a> | Phone: <a href="tel:+12163338245">216-333-8245</a></p>
-    </footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script>
-        function openCalculator() {
-            document.getElementById('calculator-modal').style.display = 'block';
-        }
-
-        function closeCalculator() {
-            document.getElementById('calculator-modal').style.display = 'none';
-        }
-
-        function openResults() {
-            document.getElementById('results-modal').style.display = 'block';
-        }
-
-        function closeResults() {
-            document.getElementById('results-modal').style.display = 'none';
-            document.getElementById('results-output').innerHTML = '';
-        }
-
-        function calculate() {
-            const buildingSize = parseFloat(document.getElementById('building-size').value);
-            const numFloors = parseInt(document.getElementById('num-floors').value);
-            const numCameras = parseInt(document.getElementById('num-cameras').value);
-            const resolution = document.getElementById('resolution').value;
-            const fps = parseInt(document.getElementById('fps').value);
-            const compression = document.getElementById('compression').value;
-            const powerPerCamera = parseFloat(document.getElementById('power').value);
-            const cableType = document.getElementById('cable-type').value;
-            const cableMaterial = document.getElementById('cable-material').value;
-            const poeStandard = document.getElementById('poe-standard').value;
-            const environment = document.getElementById('environment').value;
-
-            if (!buildingSize || !numFloors || !numCameras || !fps || !powerPerCamera || 
-                isNaN(buildingSize) || isNaN(numFloors) || isNaN(numCameras) || isNaN(fps) || isNaN(powerPerCamera) || 
-                numFloors < 1 || numFloors > 3) {
-                document.getElementById('results-output').innerHTML = '<span style="color: red;">Please fill in all fields with valid numbers (Floors: 1-3).</span>';
-                openResults();
-                return;
-            }
-
-            const sideLength = Math.sqrt(buildingSize);
-            const horizontalDistance = (sideLength / 2) * 1.2;
-            const camerasPerFloor = numCameras / numFloors;
-            let totalVerticalDistance = 0;
-            for (let floor = 1; floor <= numFloors; floor++) {
-                totalVerticalDistance += (floor - 1) * 10 * camerasPerFloor;
-            }
-            const averageVerticalDistance = totalVerticalDistance / numCameras;
-            const cableLengthFt = horizontalDistance + averageVerticalDistance + 20;
-            const cableLengthM = cableLengthFt * 0.3048;
-            const totalCableLengthFt = cableLengthFt * numCameras;
-
-            const bandwidthMap = {
-                '720p': { 'H.264': 4, 'H.265': 2, 'H.266': 1.5, 'MJPEG': 10 },
-                '1080p': { 'H.264': 8, 'H.265': 4, 'H.266': 3, 'MJPEG': 20 },
-                '3MP': { 'H.264': 10, 'H.265': 5, 'H.266': 3.75, 'MJPEG': 25 },
-                '4MP': { 'H.264': 12, 'H.265': 6, 'H.266': 4.5, 'MJPEG': 30 },
-                '5MP': { 'H.264': 14, 'H.265': 7, 'H.266': 5.25, 'MJPEG': 35 },
-                '4K': { 'H.264': 20, 'H.265': 10, 'H.266': 7.5, 'MJPEG': 50 },
-                '12MP': { 'H.264': 30, 'H.265': 15, 'H.266': 11.25, 'MJPEG': 75 }
-            };
-
-            const baseBandwidth = bandwidthMap[resolution][compression];
-            const bandwidthPerCamera = baseBandwidth * (fps / 30);
-            const totalBandwidth = bandwidthPerCamera * numCameras * 1.3;
-
-            const resistanceMap = { 'Cat5e': 0.188, 'Cat6': 0.188, 'Cat6a': 0.1, 'Cat7': 0.08 };
-            const resistance = resistanceMap[cableType] * (cableMaterial === 'CCA' ? 1.5 : 1);
-            const current = powerPerCamera / 48;
-            const powerLoss = current * current * resistance * cableLengthM;
-            const totalPowerPerCamera = powerPerCamera + powerLoss;
-            const totalPowerBudget = totalPowerPerCamera * numCameras * 1.1;
-
-            let recommendedCable = cableType;
-            if (totalBandwidth > 100 || cableLengthFt > 328) {
-                recommendedCable = 'Cat6a or Cat7';
-            }
-            if (environment === 'Outdoor') {
-                recommendedCable += ' (Shielded, Weather-Resistant)';
-            }
-
-            const poePowerMap = { '802.3af': 15.4, '802.3at': 30, '802.3bt': 90 };
-            const poePowerPerPort = poePowerMap[poeStandard];
-            const isPoESufficient = totalPowerPerCamera <= poePowerPerPort;
-            const numPortsNeeded = numCameras + Math.ceil(numCameras / 8);
-            const switchPowerBudget = totalPowerBudget * 1.2;
-            const recommendedSwitchType = numCameras > 20 ? 'Managed' : 'Unmanaged';
-            const switchSpeed = totalBandwidth > 100 ? 'Gigabit' : '100 Mbps';
-
-            const extendersNeeded = cableLengthFt > 328 ? Math.ceil(cableLengthFt / 328 - 1) * numCameras : 0;
-
-            let output = `
-                <strong>Building Size:</strong> ${buildingSize.toFixed(2)} sq ft<br>
-                <strong>Number of Floors:</strong> ${numFloors}<br>
-                <strong>Average Cable Length per Camera:</strong> ${cableLengthFt.toFixed(2)} ft<br>
-                <strong>Total Cable Length:</strong> ${totalCableLengthFt.toFixed(2)} ft<br>
-                <strong>Recommended Cable:</strong> ${recommendedCable}<br>
-                <strong>Total Bandwidth:</strong> ${totalBandwidth.toFixed(2)} Mbps<br>
-                <strong>Bandwidth per Camera:</strong> ${bandwidthPerCamera.toFixed(2)} Mbps<br>
-                <strong>Total Power Budget:</strong> ${totalPowerBudget.toFixed(2)} W<br>
-                <strong>Power Loss per Camera:</strong> ${powerLoss.toFixed(2)} W<br>
-                <strong>PoE Standard Sufficient:</strong> ${isPoESufficient ? 'Yes' : 'No, consider higher PoE standard'}<br>
-                <strong>PoE Switch Ports Needed:</strong> ${numPortsNeeded}<br>
-                <strong>Switch Power Budget Needed:</strong> ${switchPowerBudget.toFixed(2)} W<br>
-                <strong>Recommended Switch:</strong> ${recommendedSwitchType}, ${switchSpeed}<br>
-                <strong>PoE Extenders Needed:</strong> ${extendersNeeded}<br>
-            `;
-
-            if (cableMaterial === 'CCA') {
-                output += `<br><strong>Warning:</strong> CCA cables have higher resistance and may not be suitable for PoE. Use pure copper for reliability.`;
-            }
-            if (environment === 'Outdoor') {
-                output += `<br><strong>Note:</strong> Ensure cables have UL Limited Power (LP) certification for outdoor use.`;
-            }
-            if (numCameras > 50) {
-                output += `<br><strong>Scalability:</strong> Consider multiple PoE switches or a centralized NVR with high-capacity uplink.`;
-            }
-
-            document.getElementById('results-output').innerHTML = output;
-            closeCalculator();
-            openResults();
-        }
-
-        function saveAsPDF() {
-            if (window.jspdf && window.jspdf.jsPDF) {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                const output = document.getElementById('results-output').innerText;
-                doc.setFontSize(12);
-                doc.text("Cleveland Security Cameras IP Cameras Cable and Switches Calculator Results", 10, 10);
-                doc.text(output, 10, 20, { maxWidth: 180 });
-                doc.save('calculator-results.pdf');
-            } else {
-                alert('PDF library not loaded. Please try again.');
-            }
-        }
-
-        function printResults() {
-            const output = document.getElementById('results-output').innerHTML;
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <!DOCTYPE html>
-                <html>
-                    <head><title>Print Results</title></head>
-                    <body>
-                        <h2>Cleveland Security Cameras IP Cameras Cable and Switches Calculator Results</h2>
-                        <div>${output}</div>
-                    </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.focus();
-            printWindow.print();
-            setTimeout(() => printWindow.close(), 1000);
-        }
-    </script>
 </body>
 </html>
